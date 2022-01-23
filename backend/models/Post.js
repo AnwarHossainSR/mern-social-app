@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const postSchecma = new mongoose.Schema({
   caption: String,
-  imageUrl: {
+  image: {
     public_id: String,
     url: String,
   },
@@ -16,10 +16,8 @@ const postSchecma = new mongoose.Schema({
   },
   likes: [
     {
-      user: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-      },
+      type: mongoose.Types.ObjectId,
+      ref: "User",
     },
   ],
   comments: [

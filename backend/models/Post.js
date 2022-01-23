@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { stringify } = require("nodemon/lib/utils");
 
 const postSchecma = new mongoose.Schema({
   caption: String,

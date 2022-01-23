@@ -5,7 +5,7 @@ const userSchecma = new mongoose.Schema({
     type: String,
     required: [true, "Plese enter a password"],
   },
-  avatar: { public_id: String },
+  avatar: { public_id: String, url: String },
   url: String,
   email: {
     type: String,

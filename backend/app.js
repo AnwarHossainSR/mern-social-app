@@ -1,5 +1,4 @@
 const express = require("express");
-const { createPost } = require("./controllers/Post");
 const app = express();
 
 if (process.env.NODE_ENV !== "production") {
@@ -11,7 +10,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //importing Routes
-const post = require("./routes/Post");
+const post = require("./routes/post");
+const user = require("./routes/user");
+
 //using Route
 app.use("/api/v1", post);
+app.use("/api/v1", user);
+
 module.exports = app;

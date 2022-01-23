@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const postSchecma = new mongoose.Schema({
   caption: String,
-  imageUrl: {
+  image: {
     public_id: String,
     url: String,
   },

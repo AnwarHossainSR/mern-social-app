@@ -1,4 +1,7 @@
+const { findById } = require("../models/User");
 const User = require("../models/User");
+const Post = require("../models/Post");
+
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -180,3 +183,30 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+exports.deleteMyProfile = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id);
+    let posts = user.posts;
+    await user.remove();
+    //logout
+    res.cookie("token", null, {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+    });
+
+    //Deleting all post from user
+    for (let index = 0; index < posts.length; index++) {
+      const post = await Post.findById(posts[index]);
+      await post.remove();
+    }
+    res.status(200).json({
+      success: true,
+      message: "profile deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

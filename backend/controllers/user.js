@@ -187,6 +187,10 @@ exports.deleteMyProfile = async (req, res) => {
   try {
     let user = await User.findById(req.user._id);
     let posts = user.posts;
+    let followers = user.followers;
+    let following = user.following;
+    let userId = user._id;
+
     await user.remove();
     //logout
     res.cookie("token", null, {
@@ -198,6 +202,21 @@ exports.deleteMyProfile = async (req, res) => {
     for (let index = 0; index < posts.length; index++) {
       const post = await Post.findById(posts[index]);
       await post.remove();
+    }
+    //removing user from followers following
+    for (let i = 0; i < followers.length; i++) {
+      const follower = await User.findById(followers[i]);
+      const index = follower.following.indexOf(userId);
+      follower.following.splice(index, 1);
+      await follower.save();
+    }
+
+    //removing user from following's follower
+    for (let i = 0; i < following.length; i++) {
+      const follow = await User.findById(following[i]);
+      const index = follow.followers.indexOf(userId);
+      follow.followers.splice(index, 1);
+      await follow.save();
     }
     res.status(200).json({
       success: true,

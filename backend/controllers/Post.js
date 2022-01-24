@@ -111,3 +111,33 @@ exports.getPostsOfFollowing = async (req, res) => {
     });
   }
 };
+
+exports.updateCaption = async (req, res) => {
+  try {
+    let post = await Post.findById(req.params.id);
+    if (!post) {
+      res.status(400).json({
+        success: false,
+        message: "post not found",
+      });
+    }
+
+    if (post.owner.toString() !== req.user._id.toString()) {
+      res.status(400).json({
+        success: false,
+        message: "unauthorized",
+      });
+    }
+    post.caption = req.body.caption;
+    await post.save();
+    res.status(200).json({
+      success: true,
+      message: "post updated",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

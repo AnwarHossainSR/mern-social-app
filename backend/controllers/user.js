@@ -126,8 +126,14 @@ exports.followUser = async (req, res) => {
 
 exports.updatePassword = async (req, res) => {
   try {
-    let user = await User.findById($req.user._id);
+    let user = await User.findById(req.user._id).select("+password");
     const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "please provide old and new password",
+      });
+    }
     let isMatch = await user.matchPassword(oldPassword);
     if (!isMatch) {
       return res.status(400).json({
@@ -151,7 +157,7 @@ exports.updatePassword = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    let user = await User.findById($req.user._id);
+    let user = await User.findById(req.user._id);
     const { name, email } = req.body;
     if (name) {
       user.name = name;

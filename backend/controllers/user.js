@@ -244,3 +244,39 @@ exports.myProfile = async (req, res) => {
     });
   }
 };
+
+exports.userProfile = async (req, res) => {
+  try {
+    let user = await User.findById(req.params.id).populate("posts");
+    if (!user) {
+      res.status(400).json({
+        success: false,
+        message: "user not found",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.allUsers = async (req, res) => {
+  try {
+    let user = await User.find({}).populate("posts");
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

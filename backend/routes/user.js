@@ -8,6 +8,8 @@ const {
   updateProfile,
   deleteMyProfile,
   myProfile,
+  userProfile,
+  allUsers,
 } = require("../controllers/user");
 const { isAuthenticated } = require("../middlewares/auth");
 
@@ -21,5 +23,7 @@ router.route("/update/password").put(isAuthenticated, updatePassword);
 router.route("/update/profile").put(isAuthenticated, updateProfile);
 router.route("/delete/me").delete(isAuthenticated, deleteMyProfile);
 router.route("/me").get(isAuthenticated, myProfile);
+router.route("/user/:id").get(isAuthenticated, userProfile);
+router.route("/users").get(isAuthenticated, allUsers);
 
 module.exports = router;

@@ -23,7 +23,7 @@ const postSchecma = new mongoose.Schema({
   comments: [
     {
       user: { type: mongoose.Types.ObjectId, ref: "User" },
-      comment: { type: mongoose.Schema.Types.ObjectId, required: true },
+      comment: { type: String, required: true },
     },
   ],
 });

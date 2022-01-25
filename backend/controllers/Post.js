@@ -141,3 +141,75 @@ exports.updateCaption = async (req, res) => {
     });
   }
 };
+
+exports.updateCaption = async (req, res) => {
+  try {
+    let post = await Post.findById(req.params.id);
+    if (!post) {
+      res.status(400).json({
+        success: false,
+        message: "post not found",
+      });
+    }
+
+    if (post.owner.toString() !== req.user._id.toString()) {
+      res.status(400).json({
+        success: false,
+        message: "unauthorized",
+      });
+    }
+    post.caption = req.body.caption;
+    await post.save();
+    res.status(200).json({
+      success: true,
+      message: "post updated",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.commentOnPost = async (req, res) => {
+  try {
+    let post = await Post.findById(req.params.id);
+    if (!post) {
+      res.status(400).json({
+        success: false,
+        message: "post not found",
+      });
+    }
+    let commentIndex = -1;
+    //checking comment if exists
+    post.comments.forEach((item, index) => {
+      if (item.user.toString() === req.user._id.toString()) {
+        return (commentIndex = index);
+      }
+    });
+    if (commentIndex !== -1) {
+      post.comments[commentIndex].comment = req.body.comment;
+      await post.save();
+      res.status(200).json({
+        success: true,
+        message: "comment updated",
+      });
+    } else {
+      post.comments.push({
+        user: req.user._id,
+        comment: req.body.comment,
+      });
+      await post.save();
+      res.status(200).json({
+        success: true,
+        message: "comment added",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
